@@ -28,7 +28,7 @@ class PositionalEncoding(nn.Module):
         div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
         pe[:, 0::2] = torch.sin(position * div_term)
         pe[:, 1::2] = torch.cos(position * div_term)
-        # 下面这个代码后，pe形状：[max_len, 1, d_model]
+        # pe形状：[max_len, 1, d_model]
         pe = pe.unsqueeze(0).transpose(0, 1)
         self.register_buffer('pe', pe)
 
@@ -58,7 +58,8 @@ def get_attn_pad_mask(seq_q, seq_k):
 
 
 def get_attn_subsequence_mask(seq):
-    """建议打印出来看看是什么的输出（一目了然）
+    """
+    为了屏蔽dec_inputs中，未来时刻的输入，只输入当前时刻的输入信息
     seq: [batch_size, tgt_len]
     """
     attn_shape = [seq.size(0), seq.size(1), seq.size(1)]
