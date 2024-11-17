@@ -7,6 +7,20 @@ Reference: https://github.com/jadore801120/attention-is-all-you-need-pytorch
 import torch
 import torch.utils.data as Data
 
+sentences = [
+    # 中文和英语的单词个数不要求相同
+    # enc_inputs                 dec_inputs                      dec_outputs
+    ['我 在 图 书 馆 里 学 习', 'S i study in the library P', 'i study in the library P E'],     # S: 开始符号  # E: 结束符号
+    ['我 在 家 里 不 学 习 P', 'S i do not study at home', 'i do not study at home E']]          # P: 占位符号，如果当前句子不足固定长度用P占位
+
+src_vocab = {'P': 0, '我': 1, '在': 2, '图': 3, '书': 4, '馆': 5, '里': 6, '学': 7, '习': 8, '家': 9, '不': 10}
+src_idx2word = {i: w for i, w in enumerate(src_vocab)}
+src_vocab_size = len(src_vocab)
+
+tgt_vocab = {'P': 0, 'S': 1, 'E': 2, 'i': 3, 'study': 4, 'in': 5, 'the': 6, 'library': 7, 'do': 8, 'not': 9, 'at': 10, 'home': 11}
+idx2word = {i: w for i, w in enumerate(tgt_vocab)}
+tgt_vocab_size = len(tgt_vocab)
+
 def make_data(sentences):
     """把单词序列转换为数字序列"""
     enc_inputs, dec_inputs, dec_outputs = [], [], []
