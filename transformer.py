@@ -5,12 +5,9 @@ Reference: https://github.com/jadore801120/attention-is-all-you-need-pytorch
            http://nlp.seas.harvard.edu/2018/04/03/attention.html#greedy-decoding
 """
 import math
+import torch
 import numpy as np
 import torch.nn as nn
-import torch.optim as optim
-from datasets import *
-from transformer_annotated import Transformer
-from transformer import Transformer
 
 class PositionalEncoding(nn.Module):
     def __init__(self, d_model, dropout=0.1, max_len=5000):
