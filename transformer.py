@@ -32,15 +32,13 @@ class PositionalEncoding(nn.Module):
 
 
 def get_attn_pad_mask(seq_q, seq_k):
-    # pad mask的作用：在对value向量加权平均的时候，可以让pad对应的alpha_ij=0，这样注意力就不会考虑到pad向量
-    """这里的q,k表示的是两个序列（跟注意力机制的q,k没有关系），例如encoder_inputs (x1,x2,..xm)和encoder_inputs (x1,x2..xm)
-    encoder和decoder都可能调用这个函数，所以seq_len视情况而定
+    """
     seq_q: [batch_size, seq_len]
     seq_k: [batch_size, seq_len]
     seq_len could be src_len or it could be tgt_len
     seq_len in seq_q and seq_len in seq_k maybe not equal
     """
-    batch_size, len_q = seq_q.size()  # 这个seq_q只是用来expand维度的
+    batch_size, len_q = seq_q.size()  
     batch_size, len_k = seq_k.size()
     # eq(zero) is PAD token
     # 例如:seq_k = [[1,2,3,4,0], [1,2,3,5,0]]
@@ -58,8 +56,6 @@ def get_attn_subsequence_mask(seq):
     subsequence_mask = torch.from_numpy(subsequence_mask).byte()
     return subsequence_mask  # [batch_size, tgt_len, tgt_len]
 
-
-# ==========================================================================================
 class ScaledDotProductAttention(nn.Module):
     def __init__(self):
         super(ScaledDotProductAttention, self).__init__()
@@ -82,7 +78,6 @@ class ScaledDotProductAttention(nn.Module):
         # context：[[z1,z2,...],[...]]向量, attn注意力稀疏矩阵（用于可视化的）
         return context, attn
 
-
 class MultiHeadAttention(nn.Module):
     """这个Attention类可以实现:
     Encoder的Self-Attention
@@ -96,7 +91,6 @@ class MultiHeadAttention(nn.Module):
         self.W_Q = nn.Linear(d_model, d_k * n_heads, bias=False)  # q,k必须维度相同，不然无法做点积 self.W_Q是一个大小为[8,64]的权重矩阵
         self.W_K = nn.Linear(d_model, d_k * n_heads, bias=False)
         self.W_V = nn.Linear(d_model, d_v * n_heads, bias=False)
-        # 这个全连接层可以保证多头attention的输出仍然是seq_len x d_model
         self.fc = nn.Linear(n_heads * d_v, d_model, bias=False)
 
     def forward(self, input_Q, input_K, input_V, attn_mask):
@@ -107,13 +101,7 @@ class MultiHeadAttention(nn.Module):
         attn_mask: [batch_size, seq_len, seq_len]
         """
         residual, batch_size = input_Q, input_Q.size(0)
-        # 下面的多头的参数矩阵是放在一起做线性变换的，然后再拆成多个头，这是工程实现的技巧
-        # B: batch_size, S:seq_len, D: dim
-        # (B, S, D) -proj-> (B, S, D_new) -split-> (B, S, Head, W) -trans-> (B, Head, S, W)
-        #           线性变换               拆成多头
-
-        # Q: [batch_size, n_heads, len_q, d_k]
-        # gpt-->Q,W_Q是线性层的权重矩阵,self.W_Q(input_Q) 的作用就是将 input_Q 通过一个线性层（权重矩阵 W_Q）进行线性变换，将每个输入向量映射到新的维度
+       
         Q = self.W_Q(input_Q).view(batch_size, -1, n_heads, d_k).transpose(1, 2)
         # K: [batch_size, n_heads, len_k, d_k] # K和V的长度一定相同，维度可以不同
         K = self.W_K(input_K).view(batch_size, -1, n_heads, d_k).transpose(1, 2)
