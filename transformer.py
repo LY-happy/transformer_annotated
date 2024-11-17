@@ -9,6 +9,15 @@ import torch
 import numpy as np
 import torch.nn as nn
 
+src_len = 8
+tgt_len = 7
+
+d_model = 512  
+d_ff = 2048  
+d_k = d_v = 64  
+n_layers = 6  
+n_heads = 8  
+
 class PositonEncoding(nn.Module):
     def __init__(self, d_model, dropout=0.1, max_len=5000):
         super(PositonEncoding, self).__init__()
