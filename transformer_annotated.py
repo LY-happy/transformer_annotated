@@ -8,8 +8,6 @@ import math
 import torch
 import numpy as np
 import torch.nn as nn
-import torch.optim as optim
-import torch.utils.data as Data
 
 src_len = 8
 tgt_len = 7
