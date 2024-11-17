@@ -14,7 +14,6 @@ if __name__ == "__main__":
     loader = Data.DataLoader(MyDataSet(enc_inputs, dec_inputs, dec_outputs), 2, True)
     
     model = Transformer().to(device)
-    # ignore_index=0，因为 "pad" 这个单词的索引为 0，这样设置以后，就不会计算 "pad" 的损失（因为本来 "pad" 也没有意义，不需要计算）
     criterion = nn.CrossEntropyLoss(ignore_index=0)
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.99)  
 
