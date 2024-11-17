@@ -1,3 +1,9 @@
+"""
+code by Tae Hwan Jung(Jeff Jung) @graykode, Derek Miller @dmmiller612, modify by shwei
+Reference: https://github.com/jadore801120/attention-is-all-you-need-pytorch
+           https://github.com/JayParks/transformer
+           http://nlp.seas.harvard.edu/2018/04/03/attention.html#greedy-decoding
+"""
 def make_data(sentences):
     """把单词序列转换为数字序列"""
     enc_inputs, dec_inputs, dec_outputs = [], [], []
