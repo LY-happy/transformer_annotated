@@ -4,6 +4,13 @@ Reference: https://github.com/jadore801120/attention-is-all-you-need-pytorch
            https://github.com/JayParks/transformer
            http://nlp.seas.harvard.edu/2018/04/03/attention.html#greedy-decoding
 """
+import math
+import torch
+import numpy as np
+import torch.nn as nn
+import torch.optim as optim
+import torch.utils.data as Data
+
 class PositionalEncoding(nn.Module):
     def __init__(self, d_model, dropout=0.1, max_len=5000):
         super(PositionalEncoding, self).__init__()
