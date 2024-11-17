@@ -8,6 +8,9 @@ import torch.nn as nn
 from datasets import *
 from transformer import Transformer
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+epochs = 100
+
 if __name__ == "__main__":
 
     enc_inputs, dec_inputs, dec_outputs = make_data(sentences)
